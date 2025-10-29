@@ -1,0 +1,159 @@
+- React Native with Expo
+- React Navigation (stack & tab navigation)
+- NativeWind or styled-components (styling)
+- React Native Chart Kit (charts & graphs)
+- React Hook Form (form handling)
+- Zustand or Redux Toolkit (state management)
+```
+
+### **Backend**
+```
+- Node.js with Express.js
+- MongoDB with Mongoose (flexible schema)
+- JWT for authentication
+- Node-cron (scheduled reminders)
+```
+
+### **AI/Chatbot**
+```
+- OpenAI API (GPT-4 Turbo) - Best balance
+- OR Anthropic Claude API - Privacy focused
+- Axios for API calls
+```
+
+### **Notifications & Storage**
+```
+- Expo Notifications (local & push)
+- AsyncStorage (local data caching)
+- React Native MMKV (fast key-value storage)
+```
+
+### **Additional Libraries**
+```
+- date-fns or Day.js (date manipulation)
+- React Native Calendars (calendar views)
+- Victory Native (advanced charts)
+- Expo SecureStore (sensitive data)
+```
+
+---
+
+## 📁 Detailed Project Structure
+```
+FitBuddy/
+├── health-tracker/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── common/
+│   │   │   │   ├── Button.js
+│   │   │   │   ├── Input.js
+│   │   │   │   ├── Card.js
+│   │   │   │   └── LoadingSpinner.js
+│   │   │   ├── charts/
+│   │   │   │   ├── LineChart.js
+│   │   │   │   └── BarChart.js
+│   │   │   └── ChatMessage.js
+│   │   │
+│   │   ├── screens/
+│   │   │   ├── auth/
+│   │   │   │   ├── LoginScreen.js
+│   │   │   │   └── SignupScreen.js
+│   │   │   ├── screentime/
+│   │   │   │   ├── ScreenTimeHome.js
+│   │   │   │   └── ScreenTimeLog.js
+│   │   │   ├── chatbot/
+│   │   │   │   └── ChatScreen.js
+│   │   │   ├── reminders/
+│   │   │   │   ├── RemindersList.js
+│   │   │   │   └── CreateReminder.js
+│   │   │   ├── mood/
+│   │   │   │   ├── MoodJournal.js
+│   │   │   │   └── MoodCalendar.js
+│   │   │   ├── metrics/
+│   │   │   │   ├── Dashboard.js
+│   │   │   │   └── AddMetric.js
+│   │   │   └── SettingsScreen.js
+│   │   │
+│   │   ├── navigation/
+│   │   │   ├── AppNavigator.js
+│   │   │   ├── AuthNavigator.js
+│   │   │   └── TabNavigator.js
+│   │   │
+│   │   ├── services/
+│   │   │   ├── api.js
+│   │   │   ├── chatbotService.js
+│   │   │   ├── notificationService.js
+│   │   │   └── storageService.js
+│   │   │
+│   │   ├── hooks/
+│   │   │   ├── useAuth.js
+│   │   │   ├── useReminders.js
+│   │   │   └── useMetrics.js
+│   │   │
+│   │   ├── store/
+│   │   │   ├── authStore.js
+│   │   │   ├── reminderStore.js
+│   │   │   └── metricsStore.js
+│   │   │
+│   │   ├── utils/
+│   │   │   ├── dateHelpers.js
+│   │   │   ├── validators.js
+│   │   │   └── constants.js
+│   │   │
+│   │   └── config/
+│   │       ├── api.config.js
+│   │       └── theme.js
+│   │
+│   ├── assets/
+│   │   ├── images/
+│   │   └── fonts/
+│   │
+│   ├── App.js
+│   ├── app.json
+│   └── package.json
+│
+├── health-tracker-backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   │   ├── authController.js
+│   │   │   ├── screenTimeController.js
+│   │   │   ├── chatbotController.js
+│   │   │   ├── reminderController.js
+│   │   │   ├── moodController.js
+│   │   │   └── metricsController.js
+│   │   │
+│   │   ├── models/
+│   │   │   ├── User.js
+│   │   │   ├── ScreenTime.js
+│   │   │   ├── ChatMessage.js
+│   │   │   ├── Reminder.js
+│   │   │   ├── MoodEntry.js
+│   │   │   └── HealthMetric.js
+│   │   │
+│   │   ├── routes/
+│   │   │   ├── auth.routes.js
+│   │   │   ├── screentime.routes.js
+│   │   │   ├── chatbot.routes.js
+│   │   │   ├── reminder.routes.js
+│   │   │   ├── mood.routes.js
+│   │   │   └── metrics.routes.js
+│   │   │
+│   │   ├── middleware/
+│   │   │   ├── auth.middleware.js
+│   │   │   ├── validation.middleware.js
+│   │   │   └── errorHandler.js
+│   │   │
+│   │   ├── services/
+│   │   │   ├── openaiService.js
+│   │   │   └── reminderScheduler.js
+│   │   │
+│   │   └── config/
+│   │       ├── database.js
+│   │       └── constants.js
+│   │
+│   ├── .env
+│   ├── server.js
+│   └── package.json
+│
+├── .gitignore
+└── README.md
