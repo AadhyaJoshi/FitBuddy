@@ -20,7 +20,8 @@ import api from '../../services/api';
 import { notificationService } from '../../services/notificationService';
 
 export default function RemindersScreen() {
-  const [reminders, setReminders] = useState([]);
+  // const [reminders, setReminders] = useState([]);
+  const [reminders, setReminders] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,14 +42,24 @@ export default function RemindersScreen() {
     await notificationService.requestPermissions();
   };
 
+  // const loadReminders = async () => {
+  //   try {
+  //     const response = await api.get('/reminders');
+  //     setReminders(response.data);
+  //   } catch (error) {
+  //     console.error('Failed to load reminders:', error);
+  //   }
+  // };
   const loadReminders = async () => {
-    try {
-      const response = await api.get('/reminders');
-      setReminders(response.data);
-    } catch (error) {
-      console.error('Failed to load reminders:', error);
-    }
-  };
+  try {
+    const response = await api.get('/reminders');
+    // Ensure we're setting an array, fallback to empty array if response.data is undefined
+    setReminders(Array.isArray(response.data) ? response.data : []);
+  } catch (error) {
+    console.error('Failed to load reminders:', error);
+    setReminders([]); // Set empty array on error
+  }
+};
 
   const handleSubmit = async () => {
     if (!formData.title.trim()) {
@@ -138,9 +149,9 @@ export default function RemindersScreen() {
       </View>
 
       <ScrollView style={styles.scrollView}>
-        {reminders.filter(r => r.isActive).length > 0 ? (
+        {(reminders?.filter(r => r?.isActive) || []).length > 0 ? (
           reminders
-            .filter(r => r.isActive)
+            .filter(r => r?.isActive)
             .map((reminder) => (
               <Card key={reminder._id} style={styles.reminderCard}>
                 <View style={styles.reminderContent}>

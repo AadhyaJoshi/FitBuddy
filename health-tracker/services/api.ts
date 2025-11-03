@@ -1,9 +1,16 @@
+import { Platform } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const API_CONFIG = {
-  BASE_URL: __DEV__ 
-    ? 'http://192.168.1.100:5000/api' // Replace with your local IP
+  // Development: try common targets automatically.
+  // - Android emulator: 10.0.2.2
+  // - iOS simulator / Expo web: localhost
+  // - Physical device: replace HOST_IP below with your machine LAN IP (e.g. 192.168.1.100)
+  BASE_URL: __DEV__
+    ? (Platform.OS === 'android'
+        ? 'http://10.0.2.2:5000/api'         // Android emulator
+        : 'http://localhost:5000/api')       // iOS simulator / Expo web
     : 'https://your-production-api.com/api'
 };
 

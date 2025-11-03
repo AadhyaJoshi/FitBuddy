@@ -18,7 +18,7 @@ import { dateHelpers } from '../../utils/dateHelpers';
 import api from '../../services/api';
 
 export default function ScreenTimeScreen() {
-  const [entries, setEntries] = useState([]);
+  const [entries, setEntries] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   
