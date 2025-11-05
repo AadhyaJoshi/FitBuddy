@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Modal,
-  Alert
+  Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '../../components/common/Card';
@@ -16,6 +16,27 @@ import { Button } from '../../components/common/Button';
 import { COLORS, CATEGORIES } from '../../utils/constants';
 import { dateHelpers } from '../../utils/dateHelpers';
 import api from '../../services/api';
+
+const showAlert = (title: string, message: string, buttons?: any[]) => {
+  if (Platform.OS === 'web') {
+    if (buttons && buttons.length > 1) {
+      const confirmed = window.confirm(`${title}\n\n${message}`);
+      const action = buttons.find(b => b.style === 'destructive' || b.text === 'Delete' || b.text === 'OK');
+      const cancel = buttons.find(b => b.style === 'cancel' || b.text === 'Cancel');
+      
+      if (confirmed && action?.onPress) {
+        action.onPress();
+      } else if (!confirmed && cancel?.onPress) {
+        cancel.onPress();
+      }
+    } else {
+      window.alert(`${title}\n\n${message}`);
+    }
+  } else {
+    const Alert = require('react-native').Alert;
+    Alert.alert(title, message, buttons);
+  }
+};
 
 export default function ScreenTimeScreen() {
   const [entries, setEntries] = useState<any[]>([]);
@@ -36,7 +57,7 @@ export default function ScreenTimeScreen() {
   const loadEntries = async () => {
     try {
       const response = await api.get('/screentime');
-      setEntries(response.data);
+      setEntries(response.data.data || response.data);
     } catch (error) {
       console.error('Failed to load screen time:', error);
     }
@@ -46,7 +67,7 @@ export default function ScreenTimeScreen() {
     const totalMinutes = parseInt(formData.hours) * 60 + parseInt(formData.minutes);
     
     if (totalMinutes <= 0) {
-      Alert.alert('Error', 'Please enter valid time');
+      showAlert('Error', 'Please enter valid time');
       return;
     }
 
@@ -67,10 +88,35 @@ export default function ScreenTimeScreen() {
         category: 'social'
       });
     } catch (error) {
-      Alert.alert('Error', 'Failed to save screen time');
+      showAlert('Error', 'Failed to save screen time');
     } finally {
       setLoading(false);
     }
+  };
+
+  // ✅ Delete entry logic added
+  const handleDeleteEntry = (id: string) => {
+    showAlert(
+      'Delete Entry',
+      'Are you sure you want to delete this entry?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await api.delete(`/screentime/${id}`);
+              await loadEntries();
+              showAlert('Deleted', 'Entry removed successfully');
+            } catch (error) {
+              console.error('Failed to delete entry:', error);
+              showAlert('Error', 'Could not delete entry');
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -90,14 +136,22 @@ export default function ScreenTimeScreen() {
           entries.map((entry) => (
             <Card key={entry._id} style={styles.entryCard}>
               <View style={styles.entryHeader}>
-                <Text style={styles.entryDate}>
-                  {dateHelpers.formatDate(entry.date)}
-                </Text>
-                <Text style={styles.entryTime}>
-                  {Math.floor(entry.totalMinutes / 60)}h {entry.totalMinutes % 60}m
-                </Text>
+                <View>
+                  <Text style={styles.entryDate}>
+                    {dateHelpers.formatDate(entry.date)}
+                  </Text>
+                  <Text style={styles.entryTime}>
+                    {Math.floor(entry.totalMinutes / 60)}h {entry.totalMinutes % 60}m
+                  </Text>
+                </View>
+
+                {/* 🗑️ Delete button added here */}
+                <TouchableOpacity onPress={() => handleDeleteEntry(entry._id)}>
+                  <Ionicons name="trash" size={22} color="#ef4444" />
+                </TouchableOpacity>
               </View>
-              {entry.breakdown?.map((item, idx) => (
+
+              {entry.breakdown?.map((item: { category: string | number; minutes: number; }, idx: React.Key | null | undefined) => (
                 <View key={idx} style={styles.breakdownItem}>
                   <View
                     style={[
@@ -326,5 +380,5 @@ const styles = StyleSheet.create({
   },
   timeInput: {
     flex: 1,
-  }
+  },
 });

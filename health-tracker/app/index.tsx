@@ -62,7 +62,7 @@ export default function AuthScreen() {
           <View style={styles.iconContainer}>
             <Text style={styles.iconText}>💚</Text>
           </View>
-          <Text style={styles.title}>HealthTrack</Text>
+          <Text style={styles.title}>FitBuddy</Text>
           <Text style={styles.subtitle}>Your digital wellness companion</Text>
         </View>
 

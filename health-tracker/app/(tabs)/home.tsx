@@ -35,6 +35,25 @@ export default function HomeScreen() {
         api.get('/reminders/active')
       ]);
 
+      // normalize upcoming reminders (ensure time is Date or null, ensure title and id exist)
+      const rawUpcoming = remindersRes.data?.upcoming ?? [];
+      const normalizeReminder = (r: any) => {
+        const timeSource = r?.time ?? r?.date ?? null;
+        const parsed = timeSource ? new Date(timeSource) : null;
+        const time = parsed && !isNaN(parsed.getTime()) ? parsed : null;
+        return {
+          ...r,
+          _id: r?._id ?? r?.id ?? null,
+          id: r?._id ?? r?.id ?? null,
+          title: r?.title ?? r?.name ?? '',
+          time
+        };
+      };
+
+      // const upcoming = Array.isArray(rawUpcoming)
+      //   ? rawUpcoming.map(normalizeReminder).slice(0, 3)
+      //   : [];
+
       setStats({
         todayScreenTime: screenTimeRes.data.totalMinutes || 0,
         daysTracked: screenTimeRes.data.daysTracked || 0,
@@ -53,6 +72,15 @@ export default function HomeScreen() {
 
   const goal = 180; // 3 hours
   const progress = Math.min((stats.todayScreenTime / goal) * 100, 100);
+
+  // safe formatter for reminder times (handles Date, ISO string, missing/invalid values)
+  const formatReminderTime = (reminder: any) => {
+    const t = reminder?.time ?? reminder?.date ?? null;
+    if (!t) return '';
+    const d = t instanceof Date ? t : new Date(t);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -99,16 +127,13 @@ export default function HomeScreen() {
         <Card style={styles.remindersCard}>
           <Text style={styles.sectionTitle}>Upcoming Reminders</Text>
           {stats.upcomingReminders.length > 0 ? (
-            stats.upcomingReminders.map((reminder, index) => (
-              <View key={index} style={styles.reminderItem}>
+            stats.upcomingReminders.map((reminder: any, index: number) => (
+              <View key={reminder._id ?? reminder.id ?? index} style={styles.reminderItem}>
                 <Ionicons name="notifications" size={20} color={COLORS.primary} />
                 <View style={styles.reminderContent}>
-                  <Text style={styles.reminderTitle}>{reminder.title}</Text>
+                  <Text style={styles.reminderTitle}>{reminder?.title ?? ''}</Text>
                   <Text style={styles.reminderTime}>
-                    {new Date(reminder.time).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
+                    {formatReminderTime(reminder)}
                   </Text>
                 </View>
               </View>

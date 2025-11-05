@@ -274,13 +274,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#9ca3af',
   },
   dot1: {
-    animation: 'bounce 1.4s infinite ease-in-out',
+    opacity: 0.6,
   },
   dot2: {
-    animation: 'bounce 1.4s infinite ease-in-out 0.2s',
+    opacity: 0.6,
   },
   dot3: {
-    animation: 'bounce 1.4s infinite ease-in-out 0.4s',
+    opacity: 0.6,
   },
   inputContainer: {
     backgroundColor: '#fff',
